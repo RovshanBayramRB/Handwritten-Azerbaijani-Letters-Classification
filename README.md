@@ -145,14 +145,3 @@ Each model takes roughly 6 minutes for 30 epochs (~12 s/epoch on Colab CPU).
 ├── HandChars32_50_Test.txt     # 1,400 samples, 50 per class
 └── README.md
 ```
-
----
-
-## Known issues and next steps
-
-- **`LabelBinarizer` is re-fit on each split.** Cells use `fit_transform` on validation and test rather than `transform`. It works here because all 28 classes appear in every split, but it will silently produce misaligned columns on any subset where a class is missing. `transform` is the correct call.
-- **`validation_steps=10` has no effect** when `validation_data` is passed as in-memory arrays; it applies to generators. Harmless, but misleading to read.
-- **No data augmentation.** Small rotations, shifts, and elastic distortions are the standard remedy for handwriting datasets this size, and would likely help most against the unseen `PatType` variants.
-- **Dropout of 0.5 after convolutional layers is aggressive.** Spatial dropout, or a lower rate on the conv blocks with 0.5 reserved for the dense head, is the more usual configuration.
-- **No confusion matrix.** With 28 classes including visually similar pairs, knowing *which* letters get confused would be more actionable than the aggregate accuracy.
-- **Batch normalization and a learning rate schedule** are the obvious cheap wins that neither design uses.
